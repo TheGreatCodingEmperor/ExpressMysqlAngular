@@ -7,10 +7,12 @@ const JWTGuard = require('express-jwt');
 const app = express();
 
 var corsOptions = {
+  // // Deployment
+  // origin: "http://localhost:8080",
   origin: "http://localhost:8081"
 };
 
-app.use(JWTGuard({ secret: '123', algorithms: ['HS256']}).unless({path: ['/api/accounts/token','/api/accounts/signup']}));
+app.use("/api",JWTGuard({ secret: '123', algorithms: ['HS256']}).unless({path: ['/api/accounts/token','/api/accounts/signup']}));
 
 app.use(function (err, req, res, next) {
   if (err && err.name === 'UnauthorizedError') {
@@ -38,6 +40,8 @@ db.sequelize.sync();
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to bezkoder application." });
 });
+// // Deployment
+// app.use("/",express.static("Angular10Crud"))
 
 require("./app/routes/tutorial.routes")(app);
 require("./app/routes/account.routes")(app);
